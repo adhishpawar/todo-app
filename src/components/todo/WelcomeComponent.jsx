@@ -1,23 +1,47 @@
 import {useParams,Link}  from 'react-router-dom'
 import axios from 'axios'
+import { useState } from 'react'
+import { retrieveHelloWorldBean } from './api/HelloWorldApiService'
+import { retrieveHelloWorld } from './api/HelloWorldApiService'
+import { retrieveHelloWorldPathVariable } from './api/HelloWorldApiService'
 
 function WelcomeComponent()
 {
     const {username} = useParams()
 
+    const [message, setMessage] = useState(null)
+
     function callHelloWorldRestApi()
     {
         //axios used to call rest api
-        axios.get('http://localhost:8080/hello-world')
+            retrieveHelloWorld()
             .then( (response) => successfulResponse(response) )
             .catch((error) => (errorResponse(error)))
             .finally(() => console.log('CleanUp'))
- 
     }
 
+    function callHelloWorldBeanAPP()
+    {
+        retrieveHelloWorldBean()
+        .then( (response) => successfulResponse(response) )
+        .catch((error) => (errorResponse(error)))
+        .finally(() => console.log('CleanUp'))
+    }
+
+    function callHelloWorldBeanPathVariable()
+    {
+        retrieveHelloWorldPathVariable('Adhish')
+        .then( (response) => successfulResponse(response) )
+        .catch((error) => (errorResponse(error)))
+        .finally(() => console.log('CleanUp'))
+    }
+    
     function successfulResponse(response)
     {
         console.log(response)
+        
+        setMessage(response.data)
+        setMessage(response.data.message)
     }
     function errorResponse(error)
     {
@@ -34,6 +58,19 @@ function WelcomeComponent()
                 <button className="btn btn-success" onClick={callHelloWorldRestApi}>
                     Call Hello World
                 </button>  
+            </div>
+            <div>
+                <button className="btn btn-success" onClick={callHelloWorldBeanAPP}>
+                    Call Hello World Bean
+                </button>  
+            </div>
+            <div>
+                <button className="btn btn-success" onClick={callHelloWorldBeanPathVariable}>
+                    Call Hello World by Path Variable
+                </button>  
+            </div>
+            <div className='text-info'>
+                {message}
             </div>
         </div>
     )
