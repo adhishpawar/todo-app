@@ -14,6 +14,8 @@ export default function AuthProvider({children})
     
     const [isAuthenticated, SetAuthenticated] = useState(false) 
 
+    const [username, SetUsername] = useState(false) 
+
     // setInterval(() => setNumber(number+1) , 10000)
 
     // const valueToBeShared = {number,isAuthenticated,SetAuthenticated}
@@ -23,11 +25,13 @@ export default function AuthProvider({children})
         if(username === 'Adhish' && password==='dummy')
             {
                 SetAuthenticated(true)
+                SetUsername(username)
                 return true
             }   
             else{
                 
                 SetAuthenticated(false)
+                SetUsername(null)
                 return false
             }
     }
@@ -38,7 +42,7 @@ export default function AuthProvider({children})
     }
 
     return(
-        <AuthContext.Provider value={{isAuthenticated, login, logout}} >
+        <AuthContext.Provider value={{isAuthenticated, login, logout,username}} >
             {children}
         </AuthContext.Provider>
     )

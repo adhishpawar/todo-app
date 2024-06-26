@@ -54,7 +54,7 @@ function WelcomeComponent()
             <div>
                 Manage Your todos - <Link to="/todos">Click here</Link>
             </div>
-            <div>
+            {/* <div>
                 <button className="btn btn-success" onClick={callHelloWorldRestApi}>
                     Call Hello World
                 </button>  
@@ -68,7 +68,7 @@ function WelcomeComponent()
                 <button className="btn btn-success" onClick={callHelloWorldBeanPathVariable}>
                     Call Hello World by Path Variable
                 </button>  
-            </div>
+            </div> */}
             <div className='text-info'>
                 {message}
             </div>
