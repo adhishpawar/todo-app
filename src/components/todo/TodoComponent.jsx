@@ -1,19 +1,16 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { retrieveTodoApi, updateTodoApi } from "./api/TodoApiService"
+import { createTodoApi, retrieveTodoApi, updateTodoApi } from "./api/TodoApiService"
 import { useAuth } from "./Security/AuthContext"
 import { useEffect, useState } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
+import moment from "moment"
 
 export default function TodoComponent()
 {
     const {id} = useParams()
-
-
     const [description, setDesciption] = useState('')
     const [targetDate, setTargetDate] = useState('')
-
     const authContext = useAuth()
-
     const navigate = useNavigate()
 
     const username = authContext.username
@@ -26,15 +23,20 @@ export default function TodoComponent()
 
     function retrieveTodo()
     {
-        retrieveTodoApi(username,id)
+        if(id != -1)
+        {
+            retrieveTodoApi(username,id)
             .then(response => {
                 setDesciption(response.data.description)
                 setTargetDate(response.data.targetDate)
             })
             .catch(error => console.log(error))
+        }
+        
     }
 
     function onSubmit(values){
+        
         const todo = {
             id: id,
             username: username,
@@ -43,8 +45,10 @@ export default function TodoComponent()
             done:false
         }
 
-        console.log(todo)
-        updateTodoApi(username,id,todo)
+        if(id == -1)
+        {
+            console.log(todo)
+            createTodoApi(username,todo)
             .then(response => {
                 // setDesciption(response.data.description)
                 // setTargetDate(response.data.targetDate)
@@ -53,6 +57,20 @@ export default function TodoComponent()
 
             })
             .catch(error => console.log(error))
+        }
+        else{
+            console.log(todo)
+            updateTodoApi(username,id,todo)
+                .then(response => {
+                    // setDesciption(response.data.description)
+                    // setTargetDate(response.data.targetDate)
+                    console.log(response)
+                    navigate('/todos')
+    
+                })
+                .catch(error => console.log(error))
+        }
+       
         
     }
 
@@ -65,7 +83,7 @@ export default function TodoComponent()
         {
             errors.description = 'Enter atleast 5 Char'
         }
-        if(values.targetDate == null)
+        if(values.targetDate == null || values.targetDate=='' || moment(values.targetDate).isValid())
         {
             errors.targetDate = 'Enter a targetDate'
         }
